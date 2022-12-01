@@ -19,6 +19,16 @@ int check_str(string const& str) {
 	return val;
 }
 
+void del_spaces(string str) {
+	if (str[str.length() - 1] == ' ') {
+		int i = str.length() - 1;
+		while (str[i] == ' ') {
+			str.erase(i);
+			i--;
+		}
+	}
+}
+
 void replenishment_friendly(BankAccount& acc) {
 	cout << "The deposit amount should not exceed 100,000 at a time. Enter the deposit amount: ";
 	string string_value;

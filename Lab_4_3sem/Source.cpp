@@ -20,66 +20,100 @@ int main() {
 		method = check_str(met_str);
 	}
 
-	string input_login = "", input_password = "";
+	while (true) {
+		string input_login = "", input_password = "";
 
-	cout << "Enter username: ";
-	getline(cin, input_login);
-	cout << "Enter password: ";
-	getline(cin, input_password);
-	if (input_login[input_login.length() - 1] == ' ') {
-		int i = input_login.length() - 1;
-		while (input_login[i] == ' ') {
-			input_login.erase(i);
-			i--;
-		}
-	}
-	if (input_password[input_password.length() - 1] == ' ') {
-		int i = input_password.length() - 1;
-		while (input_password[i] == ' ') {
-			input_password.erase(i);
-			i--;
-		}
-	}
+		cout << "\nSelect an action:\n";
+		cout << "1) Registration;\n2) Log in;\n3) Exit.\n";
+		string rle_str = "";
+		int reg_log_ex;
+		getline(cin, rle_str);
+		reg_log_ex = check_str(rle_str);
 
-	bool account_found = false, logined = false;
-	for (auto x : users) {
-		if (x.GetLogin() == input_login && x.GetPassword() == input_password) {
-			logined_user = x;
-			account_found = true;
+		while (method < 1 || method > 3) {
+			cout << "\nSelect an action:\n";
+			cout << "1) Registration;\n2) Log in;\n3) Exit.\n";
+			getline(cin, rle_str);
+			method = check_str(rle_str);
+		}
+
+		switch (reg_log_ex)
+		{
+		case 1:
+		{
+			bool registered = false;
+			while (!registered) {
+				cout << "Enter username: ";
+				getline(cin, input_login);
+				cout << "Enter password: ";
+				getline(cin, input_password);
+				del_spaces(input_login);
+				del_spaces(input_password);
+
+				bool clear_acc = true;
+				for (auto x : users) {
+					if (x.GetLogin() == input_login) {
+						clear_acc = false;
+						break;
+					}
+				}
+				if (clear_acc) {
+					users.push_back(BankAccount(input_login, input_password));
+					registered = true;
+				}
+				else cout << "An account with this name has already been registered.\n\n";
+			}
+		}
+		break;
+		case 2:
+		{
+			bool account_found = false;
+			while (!account_found) {
+				cout << "\nEnter username: ";
+				getline(cin, input_login);
+				cout << "Enter password: ";
+				getline(cin, input_password);
+				del_spaces(input_login);
+				del_spaces(input_password);
+
+				for (auto x : users) {
+					if (x.GetLogin() == input_login && x.GetPassword() == input_password) {
+						logined_user = x;
+						account_found = true;
+						break;
+					}
+				}
+				if (account_found) cout << "You have successfully logged into your bank account, " << logined_user.GetLogin() << ".\n\n";
+				else cout << "Invalid username or password. Try logging in again.";
+			}
+
+			while (true) {
+				cout << "What kind of account operation would you like to perform?\n";
+				cout << "1) Top up your account balance;\n2) Debiting money from the account;\n3) Log out.\n";
+				cout << "Your choice: ";
+				int num;
+				cin >> num;
+				cout << "\n";
+				if (num == 1) {
+					if (method == 1) replenishment(logined_user);
+					else replenishment_friendly(logined_user);
+				}
+				if (num == 2) {
+					if (method == 1) debiting(logined_user);
+					else debiting_friendly(logined_user);
+				}
+				if (num == 3) {
+					cin.get();
+					break;
+				}
+			}
 			break;
 		}
-	}
-	while (true) {
-		if (account_found) {
-			if (!logined) {
-				cout << "You have successfully logged into your bank account, " << logined_user.GetLogin() << ".\n";
-				logined = true;
-			}
-			cout << "What kind of account operation would you like to perform?\n";
-			cout << "1) Top up your account balance;\n2) Debiting money from the account;\n3) Log out.\n";
-			cout << "Your choice: ";
-			int num;
-			cin >> num;
-			cout << "\n";
-			switch (num) {
-			case 1:
-				if (method == 1) replenishment(logined_user);
-				else replenishment_friendly(logined_user);
-				break;
-			case 2:
-				if (method == 1) debiting(logined_user);
-				else debiting_friendly(logined_user);
-				break;
-			case 3:
-				exit(1);
-			}
+		case 3:
+		{
+			exit(1);
+			break;
 		}
-		else {
-			cout << "Invalid username or password. Try logging in again.\n";
-			cout << "Enter username: ";
-			getline(cin, input_login);
-			cout << "Enter password: ";
-			getline(cin, input_password);
 		}
 	}
 }

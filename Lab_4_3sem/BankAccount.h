@@ -29,6 +29,12 @@ public:
 
 int check_str(string const& str);
 
+void del_spaces(string str);
+
 void replenishment(BankAccount& acc);
 
 void debiting(BankAccount& acc);
+
+void registration();
+
+void authorization();
