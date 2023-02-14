@@ -7,40 +7,40 @@ string  BankAccount::GetPassword() { return password; }
 int  BankAccount::GetBalance() { return balance; }
 void  BankAccount::SetBalance(int value) { balance = value; }
 
-int check_str(string const& str) {
-	int val = 0;
-	for (int i = 0; i < str.length(); i++) {
-		if ('0' <= str[i] && str[i] >= '9') {
+int ReadInt() {
+	string val;
+	cin.clear();
+	getline(cin, val);
+
+	if (val == "" || val.length() > 9) {
+		cout << "\nERROR: Incorrect input. You entered a text, not a number. (Text is automatically detected from 10 characters)\n\n";
+		return 0;
+	}
+	for (int i = 0; i < val.length(); i++) {
+		if (i == 0 && val[i] == '-') continue;
+		if (val[i] < '0' || val[i] > '9') {
+			cout << "\nERROR: Incorrect input. You entered a text, not a number. (Text is automatically detected from 10 characters)\n\n";
 			return 0;
 		}
-		val *= 10;
-		val += str[i] - '0';
 	}
-	return val;
+	return stoi(val);
 }
 
-void del_spaces(string str) {
-	if (str[str.length() - 1] == ' ') {
-		int i = str.length() - 1;
-		while (str[i] == ' ') {
-			str.erase(i);
-			i--;
-		}
+bool CheckString(string const& str) {
+	for (int i = 0; i < str.length(); i++) {
+		if (!((str[i] >= '0' && str[i] <= '9') || (str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || str[i] == '_')) return false;
 	}
+	return true;
 }
 
 void replenishment_friendly(BankAccount& acc) {
 	cout << "The deposit amount should not exceed 100,000 at a time. Enter the deposit amount: ";
-	string string_value;
-	getline(cin, string_value);
 
-	int value = check_str(string_value);
+	int value = ReadInt();
 
 	while (value < 1 || value > 100000) {
 		cout << "Incorrect amount entered (minimum - 1, maximum - 100,000). Enter the deposit amount: ";
-		string_value = "";
-		getline(cin, string_value);
-		value = check_str(string_value);
+		value = ReadInt();
 	}
 	acc.balance += value;
 	cout << "Replenishment was successful. Your current balance is " << acc.balance << ".\n\n";
@@ -50,17 +50,14 @@ void debiting_friendly(BankAccount& acc) {
 		cout << "You have zero balance.\n";
 		return;
 	}
-	cout << "Enter the amount to be debited from the account: ";
-	string string_value;
-	getline(cin, string_value);
 
-	int value = check_str(string_value);
+	cout << "Enter the amount to be debited from the account: ";
+
+	int value = ReadInt();
 
 	while (value < 1 || acc.balance - value < 0) {
 		cout << "Incorrect amount entered (minimum - 1, maximum - " << acc.balance << "). Enter the deposit amount : ";
-		string_value = "";
-		getline(cin, string_value);
-		value = check_str(string_value);
+		value = ReadInt();
 	}
 	acc.SetBalance(acc.balance - value);
 	cout << "Replenishment was successful. Your current balance is " << acc.balance << ".\n\n";
@@ -68,16 +65,12 @@ void debiting_friendly(BankAccount& acc) {
 
 void replenishment(BankAccount& acc) {
 	cout << "The deposit amount should not exceed 100,000 at a time. Enter the deposit amount: ";
-	string string_value;
-	getline(cin, string_value);
-
-	int value = check_str(string_value);
+	
+	int value = ReadInt();
 
 	while (value < 1 || value > 100000) {
 		cout << "Incorrect amount entered (minimum - 1, maximum - 100,000). Enter the deposit amount: ";
-		string_value = "";
-		getline(cin, string_value);
-		value = check_str(string_value);
+		value = ReadInt();
 	}
 	acc.SetBalance(acc.GetBalance() + value);
 	cout << "Replenishment was successful. Your current balance is " << acc.GetBalance() << ".\n\n";
@@ -87,19 +80,15 @@ void debiting(BankAccount& acc) {
 		cout << "You have zero balance.\n";
 		return;
 	}
-	cout << "Enter the amount to be debited from the account: ";
-	string string_value;
-	getline(cin, string_value);
 
-	int value = check_str(string_value);
+	cout << "Enter the amount to be debited from the account: ";
+
+	int value = ReadInt();
 
 	while (value < 1 || acc.GetBalance() - value < 0) {
 		cout << "Incorrect amount entered (minimum - 1, maximum - " << acc.GetBalance() << "). Enter the deposit amount : ";
-		string_value = "";
-		getline(cin, string_value);
-		value = check_str(string_value);
+		value = ReadInt();
 	}
 	acc.SetBalance(acc.GetBalance() - value);
 	cout << "Replenishment was successful. Your current balance is " << acc.GetBalance() << ".\n\n";
 }
-

@@ -1,23 +1,22 @@
 #include "BankAccount.h"
 
 int main() {
-	BankAccount user("USER1", "123456");
+    BankAccount user("USER1", "123456");
 	BankAccount user2("USER2", "qwerty");
 	BankAccount user3("USER3", "russia_on_the_top");
 	BankAccount logined_user;
 	vector <BankAccount> users = { user, user2, user3 };
 
-	string met_str = "";
-	int method;
 	cout << "Choose the method of working with parameters:\n";
 	cout << "1) Get/Set;\n2) Friendly.\n";
-	getline(cin, met_str);
-	method = check_str(met_str);
+
+	int method;
+	method = ReadInt();
+
 	while (method < 1 || method > 2) {
 		cout << "\nChoose the method of working with parameters:\n";
 		cout << "1) Get/Set;\n2) Friendly.\n";
-		getline(cin, met_str);
-		method = check_str(met_str);
+		method = ReadInt();
 	}
 
 	while (true) {
@@ -25,30 +24,33 @@ int main() {
 
 		cout << "\nSelect an action:\n";
 		cout << "1) Registration;\n2) Log in;\n3) Exit.\n";
-		string rle_str = "";
 		int reg_log_ex;
-		getline(cin, rle_str);
-		reg_log_ex = check_str(rle_str);
+		reg_log_ex = ReadInt();
 
-		while (method < 1 || method > 3) {
+		while (reg_log_ex < 1 || reg_log_ex > 3) {
 			cout << "\nSelect an action:\n";
 			cout << "1) Registration;\n2) Log in;\n3) Exit.\n";
-			getline(cin, rle_str);
-			method = check_str(rle_str);
+			reg_log_ex = ReadInt();
 		}
 
-		switch (reg_log_ex)
-		{
+		switch (reg_log_ex) {
 		case 1:
 		{
 			bool registered = false;
 			while (!registered) {
-				cout << "Enter username: ";
+				cout << "\nEnter username: ";
 				getline(cin, input_login);
+				if (!CheckString(input_login)) {
+					cout << "\nIncorrect input. It is necessary to enter characters in the following ranges ('A' - 'Z', 'a' - 'z', '0' - '9', '_').\n";
+					break;
+				}
+
 				cout << "Enter password: ";
 				getline(cin, input_password);
-				del_spaces(input_login);
-				del_spaces(input_password);
+				if (!CheckString(input_password)) {
+					cout << "\nIncorrect input. It is necessary to enter characters in the following ranges ('A' - 'Z', 'a' - 'z', '0' - '9', '_').\n";
+					break;
+				}
 
 				bool clear_acc = true;
 				for (auto x : users) {
@@ -61,7 +63,7 @@ int main() {
 					users.push_back(BankAccount(input_login, input_password));
 					registered = true;
 				}
-				else cout << "An account with this name has already been registered.\n\n";
+				else cout << "An account with this name has already been registered.\n";
 			}
 		}
 		break;
@@ -71,10 +73,17 @@ int main() {
 			while (!account_found) {
 				cout << "\nEnter username: ";
 				getline(cin, input_login);
+				if (!CheckString(input_login)) {
+					cout << "\nIncorrect input. It is necessary to enter characters in the following ranges ('A' - 'Z', 'a' - 'z', '0' - '9', '_').\n";
+					continue;
+				}
+
 				cout << "Enter password: ";
 				getline(cin, input_password);
-				del_spaces(input_login);
-				del_spaces(input_password);
+				if (!CheckString(input_password)) {
+					cout << "\nIncorrect input. It is necessary to enter characters in the following ranges ('A' - 'Z', 'a' - 'z', '0' - '9', '_').\n";
+					continue;
+				}
 
 				for (auto x : users) {
 					if (x.GetLogin() == input_login && x.GetPassword() == input_password) {
@@ -92,7 +101,7 @@ int main() {
 				cout << "1) Top up your account balance;\n2) Debiting money from the account;\n3) Log out.\n";
 				cout << "Your choice: ";
 				int num;
-				cin >> num;
+				num = ReadInt();
 				cout << "\n";
 				if (num == 1) {
 					if (method == 1) replenishment(logined_user);
@@ -103,7 +112,6 @@ int main() {
 					else debiting_friendly(logined_user);
 				}
 				if (num == 3) {
-					cin.get();
 					break;
 				}
 			}
@@ -111,7 +119,7 @@ int main() {
 		}
 		case 3:
 		{
-			exit(1);
+			exit(0);
 			break;
 		}
 		}

@@ -27,14 +27,9 @@ public:
 	friend void debiting_friendly(BankAccount& acc);
 };
 
-int check_str(string const& str);
-
-void del_spaces(string str);
-
 void replenishment(BankAccount& acc);
 
 void debiting(BankAccount& acc);
 
-void registration();
-
-void authorization();
+int ReadInt();
+bool CheckString(string const& str);
